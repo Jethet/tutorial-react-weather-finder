@@ -28,14 +28,25 @@ class App extends React.Component {
     const data = await api_call.json();
 
     if (city && country) {
-      this.setState({
-        city: data.name,
-        country: data.sys.country,
-        temperature: data.main.temp,
-        humidity: data.main.humidity,
-        description: data.weather[0].description,
-        error: ""
-      });
+      if (data.cod == 404) {
+        this.setState({
+          city: undefined,
+          country: undefined,
+          temperature: undefined,
+          humidity: undefined,
+          description: undefined,
+          error: "Input does not match any known location."
+        });
+      } else {
+        this.setState({
+          city: data.name,
+          country: data.sys.country,
+          temperature: data.main.temp,
+          humidity: data.main.humidity,
+          description: data.weather[0].description,
+          error: ""
+        });
+      }
     } else {
       this.setState({
         city: undefined,
@@ -55,10 +66,10 @@ class App extends React.Component {
           <div className="main">
             <div className="container">
               <div className="row">
-                <div className="col-xs-5 title-container">
+                <div className="col-5 title-container">
                   <Titles />
                 </div>
-                <div className="col-xs-7 form-con">
+                <div className="col-7 form-container">
                   <Form getWeather={this.getWeather} />
                   <Weather
                     city={this.state.city}
